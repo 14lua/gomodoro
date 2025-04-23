@@ -8,10 +8,10 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use: "gomo",
+	Use:   "gomo",
 	Short: "gomo is a cli tool to track your pomodoro sessions.",
-	Long: "gomo is a cli tool to track your pomodoro sessions. it shows you pretty timers and all ^.^",
-	Run: func(cmd *cobra.Command, args []string) {},
+	Long:  "gomo is a cli tool to track your pomodoro sessions. it shows you pretty timers and all ^.^",
+	Run:   func(cmd *cobra.Command, args []string) {},
 }
 
 func Execute() {
