@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 
-	tea "github.com/charmbracelet/bubbletea"
 	"github.com/spf13/cobra"
 )
 
@@ -20,4 +19,5 @@ func Execute() {
 		fmt.Fprintf(os.Stderr, "Oh no. An error while executing gomo: %s", err)
 		os.Exit(1)
 	}
+	StartMenu()
 }
