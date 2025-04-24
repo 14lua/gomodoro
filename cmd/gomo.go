@@ -9,7 +9,7 @@ import (
 )
 
 type model struct {
-	choices  []string
+	choices  []option
 	cursor   int
 	selected map[int]struct{}
 }
@@ -19,7 +19,7 @@ type option struct {
 	execute func() // TODO startTimer(n minutes)
 }
 
-const padding = "  "
+const padding = "    "
 
 var styleSelected = lipgloss.NewStyle().
 	Bold(true).
@@ -36,15 +36,23 @@ func StartMenu() {
 	}
 }
 
+func startTimer(minutes int) {
+	fmt.Print(minutes)
+}
+
 func initialModel() model {
 	return model{
-		choices:  []string{"work", "short break", "long break"},
+		choices: []option{
+			option{"work", func() { startTimer(25) }},
+			option{"short break", func() { startTimer(5) }},
+			option{"long break", func() { startTimer(25) }},
+		},
 		selected: make(map[int]struct{}),
 	}
 }
 
 func (m model) Init() tea.Cmd {
-	return nil
+	return tea.ClearScreen
 }
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -61,21 +69,24 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if m.cursor < len(m.choices)-1 {
 				m.cursor++
 			}
+		case "enter":
+			m.choices[m.cursor].execute()
+			return m, tea.ClearScreen
 		}
 	}
 	return m, nil
 }
 
 func (m model) View() string {
-	s := padding + "Which phase to start?\n\n"
+	s := "\n" + padding + "Which phase to start?\n\n"
 	for i, choice := range m.choices {
 		s += padding
 		if m.cursor == i {
-			s += styleSelected.Render(choice) + "\n"
+			s += styleSelected.Render(choice.label) + "\n"
 		} else {
-			s += choice + "\n"
+			s += choice.label + "\n"
 		}
 	}
-	s += "\n" + padding + "Press q to quit.\n"
+	s += "\n" + padding + "Press q to quit.\n\n"
 	return s
 }
